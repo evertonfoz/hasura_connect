@@ -1,8 +1,0 @@
-workflows:
-    flutter-package:
-        name: Flutter or Dart Package
-        environment:
-            flutter: dev
-        scripts:
-            - pub get
-            - pub run test

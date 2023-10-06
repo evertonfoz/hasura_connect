@@ -27,7 +27,7 @@
 
 <!--  SHIELDS  ---->
 
-[![License](https://img.shields.io/github/license/flutterando/hasura_connect?style=plastic)](https://github.com/Flutterando/hasura_connect/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/Flutterando/hasura_connect?style=plastic)](https://github.com/Flutterando/hasura_connect/blob/master/packages/hasura_connect/LICENSE)
 [![Pub Points](https://img.shields.io/pub/points/hasura_connect?label=pub%20points&style=plastic)](https://pub.dev/packages/hasura_connect/score)
 [![Contributors](https://img.shields.io/github/contributors/flutterando/hasura_connect?style=plastic)](https://github.com/Flutterando/hasura_connect/graphs/contributors)
 [![Forks](https://img.shields.io/github/forks/flutterando/hasura_connect?color=yellowgreen&logo=github&style=plastic)](https://github.com/Flutterando/hasura_connect/graphs/contributors)
@@ -74,11 +74,12 @@ The hasura_connect is designed to facilitate Hasura's integration with Flutter a
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
 <!-- SPONSORS -->
 ## Sponsors
 
 <a href="https://fteam.dev">
-    <img src="https://raw.githubusercontent.com/Flutterando/hasura_connect/master/images/sponsor-logo.png" alt="Logo" width="180">
+    <img src="images/sponsor-logo.png" alt="Logo" width="180">
   </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -175,6 +176,73 @@ Snapshot snapshot = await hasuraConnect.subscription(docSubscription, variables:
 //change values of variables for PAGINATIONS
 snapshot.changeVariable({"limit": 20});
 ``` 
+
+## Execute a Query from a Document
+
+```dart
+Future query(
+    String document, {
+    String? key,
+    Map<String, dynamic>? variables,
+    Map<String, String>? headers,
+  }) async {
+    final _key = key ?? _keyGenerator.generateBase(document);
+    return executeQuery(
+      Query(
+        key: _key,
+        headers: headers,
+        document: document.trimLeft(),
+        variables: variables,
+      ),
+    );
+  }
+```
+
+## Execute a Subscription from a Document
+
+```dart
+ Future<Snapshot> subscription(
+    String document, {
+    String? key,
+    Map<String, dynamic>? variables,
+    Map<String, String>? headers,
+  }) async {
+    final _document = document.trim();
+    final _key = key ?? _keyGenerator.generateBase(document);
+
+    return executeSubscription(
+      Query(
+        key: _key,
+        headers: headers,
+        document: _document,
+        variables: variables,
+      ),
+    );
+  }
+```
+
+## Execute a Mutation from a Document
+
+```dart
+  Future mutation(
+    String document, {
+    Map<String, dynamic>? variables,
+    bool tryAgain = true,
+    String? key,
+    Map<String, String>? headers,
+  }) async {
+    final _key = key ?? _keyGenerator.randomString(15);
+
+    return executeMutation(
+      Query(
+        key: _key,
+        headers: headers,
+        document: document.trimLeft(),
+        variables: variables,
+      ),
+    );
+  }
+```
 
 ## INTERCEPTORS
 
@@ -319,24 +387,6 @@ _For more examples, please refer to the 🚧 [Documentation](https://example.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Common Errors
-
-- Query data returned not decoded to utf-8. 
-
-Fix:
-
-```dart
-import 'dart:convert';
-
-extension Utf8convert on String {
-  String  _utf8convert() {
-    List<int> bytes = this.toString().codeUnits;
-    return utf8.decode(bytes);
-  }
-  String get utf8convert => _utf8convert();
-}
-``` 
-
 
 
 <!-- ROADMAP -->
@@ -427,7 +477,7 @@ Flutterando Community
 <br>
 <p align="center">
   <a href="https://www.flutterando.com.br">
-    <img width="110px" src="https://raw.githubusercontent.com/Flutterando/hasura_connect/master/images/logo-flutterando.png">
+    <img width="110px" src="images/logo-flutterando.png">
   </a>
   <p align="center">
     Built and maintained by <a href="https://www.flutterando.com.br">Flutterando</a>.
